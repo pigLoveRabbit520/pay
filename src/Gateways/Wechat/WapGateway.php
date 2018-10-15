@@ -20,9 +20,9 @@ class WapGateway extends Gateway
      * @throws \Yansongda\Pay\Exceptions\InvalidArgumentException
      * @throws \Yansongda\Pay\Exceptions\InvalidSignException
      *
-     * @return Response
+     * @return string
      */
-    public function pay($endpoint, array $payload): Response
+    public function pay($endpoint, array $payload): string
     {
         $payload['trade_type'] = $this->getTradeType();
 
@@ -33,7 +33,7 @@ class WapGateway extends Gateway
         $url = is_null(Support::getInstance()->return_url) ? $data->mweb_url : $data->mweb_url.
                         '&redirect_url='.urlencode(Support::getInstance()->return_url);
 
-        return RedirectResponse::create($url);
+        return $url;
     }
 
     /**
