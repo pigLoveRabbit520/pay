@@ -19,9 +19,9 @@ class AppGateway implements GatewayInterface
      * @throws \Yansongda\Pay\Exceptions\InvalidArgumentException
      * @throws \Yansongda\Pay\Exceptions\InvalidConfigException
      *
-     * @return Response
+     * @return string
      */
-    public function pay($endpoint, array $payload): Response
+    public function pay($endpoint, array $payload): string
     {
         $payload['method'] = $this->getMethod();
         $payload['biz_content'] = json_encode(array_merge(
@@ -32,7 +32,7 @@ class AppGateway implements GatewayInterface
 
         Log::info('Starting To Pay An Alipay App Order', [$endpoint, $payload]);
 
-        return Response::create(http_build_query($payload));
+        return http_build_query($payload);
     }
 
     /**
