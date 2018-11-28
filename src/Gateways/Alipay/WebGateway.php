@@ -19,9 +19,9 @@ class WebGateway implements GatewayInterface
      * @throws \Yansongda\Pay\Exceptions\InvalidArgumentException
      * @throws \Yansongda\Pay\Exceptions\InvalidConfigException
      *
-     * @return array
+     * @return string
      */
-    public function pay($endpoint, array $payload): array
+    public function pay($endpoint, array $payload): string
     {
         $payload['method'] = $this->getMethod();
         $payload['biz_content'] = json_encode(array_merge(
@@ -32,7 +32,20 @@ class WebGateway implements GatewayInterface
 
         Log::info('Starting To Pay An Alipay Web/Wap Order', [$endpoint, $payload]);
 
-        return $payload;
+        return $this->getBuildHtml($endpoint, $payload);
+    }
+
+
+
+    private function getBuildHtml($endpoint, $payload): string {
+        $sHtml = "<form id='alipaysubmit' name='alipaysubmit' action='".$endpoint."' method='POST'>";
+        foreach ($payload as $key => $val) {
+            $val = str_replace("'", '&apos;', $val);
+            $sHtml .= "<input type='hidden' name='".$key."' value='".$val."'/>";
+        }
+        $sHtml .= "<input type='submit' value='ok' style='display:none;''></form>";
+        $sHtml .= "<script>document.forms['alipaysubmit'].submit();</script>";
+        return $sHtml;
     }
 
     /**
